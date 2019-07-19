@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+    <head>
+        <title>MRSA</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" 
+              rel="stylesheet">
+        <link rel="stylesheet" 
+                href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body ng-controller="MyC">
+        <h1 class="animated bounceInDown">Movie Review Sentiment Analyzer</h1>
+        <h3>This Website has been created using AngularJS on front end and Flask on the Back End.
+            I performed Sentiment Analysis on the Rotten Tomatoes reviews of these movies and classified 
+        each review either as Positive or Negative.I trained my model by Linear SVC and vectorised using 
+        TF-IDF Vectoriser</h3>
+            <fieldset>
+            <legend>Select A Movie From The List</legend>
+            <!-- <input list="browsers"> -->
+                <select id="browsers" ng-model="movieSelected.value" >
+                  <option value="Annihilation" >Annihilation</option>
+                  <option value="A Wrinkle in Time" >A Wrinkle In Time</option>
+                  <option value="Black Panther">Black Panther</option>
+                  <option value="Coco" >Coco</option>
+
+                  <option value="Ferdinand">Ferdinand</option>
+                  <option value="Gods not Dead">Gods Not Dead</option>
+                  <option value="Jumanji" >Jumanji</option>
+                  <option value="Love Simon">Love Simon </option>
+
+                  <option value="Paul Apostle of Christ">Paul Apostle Of Christ</option>
+                  <option value="Peter Rabbit" >Peter Rabbit</option>
+                  <option value="Ready Player One">Ready Player One</option>
+                  <option value="Sherlock Gnomes" >Sherlock Gnomes</option>
+
+                  <option value="The Death of Stalin">The Death Of Stalin</option>
+                  <option value="The Last Jedi" >The Last Jedi</option>
+                  <option value="The Shape of Water">The Shape Of Water</option>
+                  <option value="Tomb Raider" >Tomb Raider</option>
+                  </select> 
+                <button type="button" 
+                        class="btn btn-primary" 
+                        ng-click="view()">View Details</button>
+            </fieldset>
+            <p style="text-decoration: underline">Average Rating :{{movieSelected.avgRate}}</p>
+            <p style="color: green">Positive Reviews : {{movieSelected.pos}} %</p>
+            <p style="color: red">Negative Reviews : {{movieSelected.neg}}  %</p>
+            <script>
+                var MyApp=angular.module("MyApp",[]).controller("MyC",
+                function($scope,$http){
+                    $scope.movieSelected={
+                        value:"Annihilation",
+                        avgRate:null,
+                        neg:null,
+                        pos:null
+                    };
+                    $scope.view=function(){
+                       $http.post("http://localhost:5004/movie",JSON.stringify($scope.movieSelected))
+                       .then(
+                       function(response){
+                            $scope.response=response;
+                            $scope.movieSelected.avgRate=response.data.avgrate;
+                            $scope.movieSelected.neg=response.data.neg;
+                            $scope.movieSelected.pos=response.data.pos;
+                            console.log($scope.movieSelected.pos);
+                       },
+                       function(response){console.log(response)}
+                       );
+                    };
+                    
+                });
+            </script>
+    </body>
+</html>
