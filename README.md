@@ -1,2 +1,2 @@
 # MRSAFE
-Angular JS HTML CSS
+Angular HTML CSS
